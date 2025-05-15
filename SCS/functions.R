@@ -92,3 +92,61 @@ col_10 = function(...) {
 col_12 = function(...) {
   shiny::column(12, ...)
 }
+
+
+
+
+
+
+
+P_eff_dist = function(p, t, I_a, S) {
+  
+  print(I_a)
+  print(S)
+  
+  df = data.frame(
+    i = 1:length(t),
+    t = t,
+    P = p
+  )
+  
+  df$P_cum = cumsum(df$P)
+  df$I_a = rep(I_a, nrow(df))
+  df$Fi = S * (df$P_cum - I_a)/(df$P_cum - I_a + S )
+  df$Fi[df$P_cum<I_a] = 0
+  df$P_effcum = df$P_cum-I_a-df$Fi
+  df$P_eff = c(0, diff(df$P_effcum))
+  
+  return(df)
+  
+}
+
+PeffPlot = function(df) {
+  df$PminusPeff = df$P-df$P_eff
+  
+  iarunner = unique(df$I_a)
+  wi = c()
+
+  for (i in 1:nrow(df)){
+    if (iarunner/df$P[i] >= 1) {
+      iarunner = iarunner - df$P[i]
+      wi = c(wi, 1)
+    } else if (iarunner/df$P[i] < 1){
+      wi = c(wi, iarunner/df$P[i])
+      iarunner = 0
+    } else (
+      wi = c(wi, 0)
+    )
+    print(wi)
+  }
+  
+  par(mar = c(1, 4, 4, 2) + 0.1)
+  barplot(height = df$P, space = 0, col = '#0000ff', main = "P over t", adj = 0)
+  barplot(height = df$PminusPeff, space = 0, col="#92d050", add=T)
+  barplot(height = df$P, width = wi, space = 0, col="#ff0000", border = NA, add=T)
+  barplot(height = df$P, space = 0, col = 'transparent', add=T)
+  
+  
+}
+
+

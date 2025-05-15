@@ -15,7 +15,7 @@ fluidPage(
   ### Title "Muskingum Application"
   
   shiny::fluidRow(
-    shiny::titlePanel("SCS Method")
+    h1("SCS Method")
   ),
   
   
@@ -90,11 +90,14 @@ fluidPage(
   ),
   
   shiny::fluidRow(
-    col_3(
+    col_2(
       shiny::uiOutput("ui_dInput")
     ),
-    col_3(
+    col_2(
       shiny::uiOutput("ui_pInput")
+    ),
+    col_2(
+      shiny::uiOutput("ui_aInput")
     ),
     col_6(
       shinydashboard::box(
@@ -118,6 +121,7 @@ fluidPage(
   
   ### Calculations
   
-  shiny::uiOutput("calculations")
-  
+  shiny::uiOutput("calculations"),
+  shiny::uiOutput("curve_number"),
+  shiny::uiOutput("distr")
 )
